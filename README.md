@@ -14,8 +14,9 @@ optional arguments:
 
 To compile for python3 - create virtual environment and activate: 
 
-```virtualenv -p python3 venv_3```
-```source venv_3/bin/activate```
+```virtualenv -p python3 venv_3
+source venv_3/bin/activate
+```
 
 Then launch the script:
 
@@ -23,6 +24,7 @@ Then launch the script:
 
 
 To compile for python2.7 
-```virtualenv -p python2 venv_2```
-```source venv_2/bin/activate```
-```sudo python opencv_compile.py --cv_ver 3.4.7```
+```virtualenv -p python2 venv_2
+source venv_2/bin/activate
+sudo python opencv_compile.py --cv_ver 3.4.7
+```
