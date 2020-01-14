@@ -15,10 +15,13 @@ if not args.cv_ver:
     sys.exit()
 
 print('Updating repositories')
-os.system('apt-get update && apt-get -y upgrade')
+os.system('sudo apt-get update && sudo apt-get -y upgrade')
 
 print('Installing required packages..')
-os.system('apt-get install -y build-essential cmake pkg-config libjpeg-dev libtiff5-dev libjasper-dev libpng-dev libavcodec-dev libavformat-dev libswscale-dev libv4l-dev libxvidcore-dev libx264-dev libfontconfig1-dev libcairo2-dev libgdk-pixbuf2.0-dev libpango1.0-dev libgtk2.0-dev libgtk-3-dev libatlas-base-dev gfortran libhdf5-serial-dev libqtgui4 libqtwebkit4 libqt4-test python3-pyqt5 python-dev python3-dev ')
+os.system('sudo apt-get install -y build-essential cmake pkg-config libjpeg-dev libtiff5-dev libjasper-dev libpng-dev libavcodec-dev libavformat-dev libswscale-dev libv4l-dev libxvidcore-dev libx264-dev libfontconfig1-dev libcairo2-dev libgdk-pixbuf2.0-dev libpango1.0-dev libgtk2.0-dev libgtk-3-dev libatlas-base-dev gfortran libhdf5-serial-dev libqtgui4 libqtwebkit4 libqt4-test python3-pyqt5 python-dev python3-dev ')
+
+print('Adding fast repository')
+os.system('echo "[global]\nextra-index-url=https://www.piwheels.org/simple" | sudo tee /etc/pip.conf')
 
 print('Installing required pip packages')
 os.system('pip install numpy')
@@ -40,18 +43,18 @@ os.chdir('build')
 print(os.getcwd())
 
 print('Changing swap size..')
-os.system('sed -i "s/CONF_SWAPSIZE=100/CONF_SWAPSIZE=2048/g" /etc/dphys-swapfile') 
-os.system('/etc/init.d/dphys-swapfile restart')
+os.system('sudo sed -i "s/CONF_SWAPSIZE=100/CONF_SWAPSIZE=2048/g" /etc/dphys-swapfile') 
+os.system('sudo /etc/init.d/dphys-swapfile restart')
 
 print('Configuring opencv..')
 
 os.system('cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local -D OPENCV_EXTRA_MODULES_PATH=../../opencv_contrib-{}/modules -D ENABLE_NEON=ON -D ENABLE_VFPV3=ON -D BUILD_TESTS=OFF -D INSTALL_PYTHON_EXAMPLES=OFF -D OPENCV_ENABLE_NONFREE=ON -D CMAKE_SHARED_LINKER_FLAGS="-latomic" -D BUILD_EXAMPLES=OFF -D WITH_GSTREAMER=OFF ..'.format(args.cv_ver))
 print('Compiling..')
-# made 2 workers instead of 4, to avoid RPi crash. 
-os.system('make -j2 && make install && ldconfig')
+# made 2 workers instead of 4, to avoid RPi crash. Will take some more time..
+os.system('make -j2 && sudo make install && sudo ldconfig')
 
 print('Return back swap size..')
-os.system('sed -i "s/CONF_SWAPSIZE=2048/CONF_SWAPSIZE=100/g" /etc/dphys-swapfile') 
-os.system('/etc/init.d/dphys-swapfile restart')
+os.system('sudo sed -i "s/CONF_SWAPSIZE=2048/CONF_SWAPSIZE=100/g" /etc/dphys-swapfile') 
+os.system('sudo /etc/init.d/dphys-swapfile restart')
 
 print('Done!')
